@@ -4,6 +4,8 @@ from pyspark.ml.feature import StringIndexer, VectorAssembler
 from pyspark.ml.classification import RandomForestClassifier
 from pyspark.ml.evaluation import MulticlassClassificationEvaluator
 from pyspark.sql.functions import when, col
+from pyspark.ml import Pipeline
+
 
 
 
@@ -34,7 +36,6 @@ df = df.dropna()
 # Im going to split this into if there is a coapplicant (income present) or there is no coapplicant (no income present) to avoid the incomes of 0 for no coapplicant skewing data. 
 
 df['HasCoapplicant'] = (df['CoapplicantIncome'] > 0 ).astype(int)
-df = df.drop(columns = ['CoapplicantIncome'])
 
 # Discretize 
 # I'm going to make even bin width until I reach the end of the majority of the data
@@ -105,7 +106,7 @@ predictions = model.transform(test_data)
 accuracy = evaluator.evaluate(predictions)
 
 with open(output_path, "w") as f:
-    f.write(f"Random Forest Classification Accuracy: {accuracy:.4f}\n")
+    f.write(f"Random Forest Classification Accuracy 100 trees: {accuracy:.4f}\n")
 
 # ML 2: rf500
 
@@ -120,7 +121,7 @@ predictions = model.transform(test_data)
 accuracy = evaluator.evaluate(predictions)
 
 with open(output_path, "a") as f:
-    f.write(f"Random Forest Classification Accuracy: {accuracy:.4f}\n")
+    f.write(f"Random Forest Classification Accuracy 500 trees: {accuracy:.4f}\n")
 
 # ML 3: rf1000
 
@@ -135,4 +136,4 @@ predictions = model.transform(test_data)
 accuracy = evaluator.evaluate(predictions)
 
 with open(output_path, "a") as f:
-    f.write(f"Random Forest Classification Accuracy: {accuracy:.4f}\n")
+    f.write(f"Random Forest Classification Accuracy 1000 trees: {accuracy:.4f}\n")
